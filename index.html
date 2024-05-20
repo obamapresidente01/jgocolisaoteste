@@ -1,36 +1,75 @@
-<!-- Arquivo Exercício Colisão.html -->
 <!DOCTYPE HTML>
-<html>
+<html lang="pt-BR">
 <head>
-<title>Exercício Colisão</title>
-<script src= "gamesWeb.js" ></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício Colisão</title>
+    <script src="gamesWeb.js"></script>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #000; }
+        canvas { border: 1px solid #fff; }
+    </style>
 </head>
 <body>
-<canvas id="canv" width="1000" height="600">
-Este browser não suporta o objeto canvas do HTML5.
-</canvas>
-<script>
-canvas = document.getElementById("canv");
-ctx = canvas.getContext("2d");
-nave = new Image();
-nave.src = "img/nave.png";
-nave.onload = function() {
-xNave = canvas.width / 2 - nave.width/2;
-yNave = canvas.height - nave.height;
-ctx.drawImage(nave, xNave, yNave);
-}
-inimigo = new Image();
-inimigo.src = "img/inimigo.png";
-inimigo.onload = function() {
-xInimigo = canvas.width / 2 - nave.width/2;
-yInimigo = 0;
-ctx.drawImage(inimigo, xInimigo, yInimigo);
-}
+    <canvas id="canv" width="1000" height="600">
+        Este browser não suporta o objeto canvas do HTML5.
+    </canvas>
+    <script>
+        const canvas = document.getElementById("canv");
+        const ctx = canvas.getContext("2d");
 
-document.addEventListener("keydown",
-function(evento) {
-movimentaNaveInimigo(evento.key);
-});
-</script>
+        const nave = new Image();
+        nave.src = "img/nave.png";
+
+        const inimigo = new Image();
+        inimigo.src = "img/inimigo.png";
+
+        let xNave, yNave;
+        let xInimigo, yInimigo;
+
+        nave.onload = function() {
+            xNave = canvas.width / 2 - nave.width / 2;
+            yNave = canvas.height - nave.height;
+            ctx.drawImage(nave, xNave, yNave);
+        }
+
+        inimigo.onload = function() {
+            xInimigo = canvas.width / 2 - inimigo.width / 2;
+            yInimigo = 0;
+            ctx.drawImage(inimigo, xInimigo, yInimigo);
+        }
+
+        document.addEventListener("keydown", function(evento) {
+            movimentaNaveInimigo(evento.key);
+        });
+
+        function movimentaNaveInimigo(key) {
+            // Limpar o canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Movimento da nave
+            if (key === "ArrowLeft" && xNave > 0) {
+                xNave -= 10;
+            }
+            if (key === "ArrowRight" && xNave < canvas.width - nave.width) {
+                xNave += 10;
+            }
+
+            // Movimento do inimigo (exemplo: mover para baixo)
+            yInimigo += 2; // Velocidade do inimigo
+
+            // Desenhar a nave e o inimigo
+            ctx.drawImage(nave, xNave, yNave);
+            ctx.drawImage(inimigo, xInimigo, yInimigo);
+
+            // Verificar colisão
+            if (yInimigo + inimigo.height > yNave && xInimigo < xNave + nave.width && xInimigo + inimigo.width > xNave) {
+                alert("Colisão detectada!");
+                // Resetar posições
+                xInimigo = canvas.width / 2 - inimigo.width / 2;
+                yInimigo = 0;
+            }
+        }
+    </script>
 </body>
 </html>
